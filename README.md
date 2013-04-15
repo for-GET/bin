@@ -26,6 +26,9 @@ curl -XTRACE -H"Accept: application/json"                     http://127.0.0.1:1
 # ORIGINATING IP
 # see response
 
+# GZIP/DEFLATE
+curl -H"Accept-Encoding: gzip,deflate"                        http://127.0.0.1:1337   # GZIP README.md
+
 # PREFER
 curl -H"X-Prefer: status=404"                                 http://127.0.0.1:1337 # 404 Not Found
 curl -H"X-Prefer: cookie=name1|v, cookie=name2|v"             http://127.0.0.1:1337 # Set cookies "name1" and "name2"
