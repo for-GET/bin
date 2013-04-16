@@ -25,7 +25,9 @@
   },
   "dependencies": {
     "express": "~3.1.2",
-    "coffee-script": "~1.6.2"
+    "coffee-script": "~1.6.2",
+    "js2xmlparser": "~0.1.0",
+    "xml2js": "~0.2.6"
   },
   "bin": {
     "hyperrest-bin": "./cli.js"

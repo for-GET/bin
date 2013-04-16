@@ -19,11 +19,13 @@ curl                                                          http://127.0.0.1:1
 curl                                                          http://127.0.0.1:1337/* # README.md on any path
 curl -XPOST                                                   http://127.0.0.1:1337   # README.md
 curl -XPOST -H"Accept: application/json"                      http://127.0.0.1:1337   # JSON TRACE
+curl -XPOST -H"Accept: application/xml"                       http://127.0.0.1:1337   # XML TRACE
 
 # TRACE, METHOD OVERRIDE
 curl -XTRACE                                                  http://127.0.0.1:1337 # message/http TRACE
 curl -XPOST  -H"X-HTTP-Method-Override: TRACE"                http://127.0.0.1:1337 # message/http TRACE still
 curl -XTRACE -H"Accept: application/json"                     http://127.0.0.1:1337 # JSON TRACE
+curl -XTRACE -H"Accept: application/xml"                      http://127.0.0.1:1337 # XML TRACE
 
 # ORIGINATING IP
 # see response

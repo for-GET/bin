@@ -3,6 +3,8 @@ zlib = require 'zlib'
 querystring = require 'querystring'
 README = fs.readFileSync './README.md', 'utf8'
 express = require 'express'
+js2xml = require 'js2xmlparser'
+xml2js = require 'xml2js'
 
 module.exports = app = express()
 
@@ -62,12 +64,21 @@ app.use (req, res, next) ->
         req.body = JSON.parse req.rawBody
       catch e
         return res.send 400
-    if req.headers['content-type'] is 'application/x-www-form-urlencoded'
+      next()
+    else if /\bxml\b/.test(req.headers['content-type'] or '')
+      try
+        xml2js.parseString req.rawBody, (err, result) ->
+          return res.send 400  if err
+          req.body = result
+          next()
+      catch e
+        return res.send 400
+    else if req.headers['content-type'] is 'application/x-www-form-urlencoded'
       try
         req.body = querystring.parse req.rawBody
       catch e
         return res.send 400
-    next()
+      next()
 app.use express.cookieParser()
 
 # ORIGIN IP
@@ -172,10 +183,11 @@ app.use (req, res, next) ->
 # ROUTES
 app.use app.router
 app.all '*', (req, res, next) ->
+  console.log 123
   if req.accepts 'text/plain'
     res.set 'Content-Type', 'text/plain'
     send README, req, res, next
-  else if req.accepts 'application/json'
+  else if req.accepts('application/json') or req.accepts('application/xml')
     fakeTrace req, res, next
   else
     returnRepr = req.prefer?['return-representation']
