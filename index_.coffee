@@ -57,8 +57,16 @@ app.use (req, res, next) ->
   req.on 'data', (chunk) -> req.rawBody += chunk
   req.on 'end', () ->
     req.body = req.rawBody
-    req.body = JSON.parse req.rawBody  if req.headers['content-type'] is 'application/json'
-    req.body = querystring.parse req.rawBody  if req.headers['content-type'] is 'application/x-www-form-urlencoded'
+    if /\bjson\b/.test(req.headers['content-type'] or '')
+      try
+        req.body = JSON.parse req.rawBody
+      catch e
+        return res.send 400
+    if req.headers['content-type'] is 'application/x-www-form-urlencoded'
+      try
+        req.body = querystring.parse req.rawBody
+      catch e
+        return res.send 400
     next()
 app.use express.cookieParser()
 
