@@ -6,7 +6,7 @@ A simple HTTP service with controlled behaviour, inspired by [httpbin](https://g
 
 ```bash
 npm install hyperrest-bin
-./hyperrest-bin # or PORT=1337 ./hyperrest-bin
+hyperrest-bin # or PORT=1337 hyperrest-bin
 ```
 
 # Usage
