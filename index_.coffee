@@ -6,27 +6,36 @@ express = require 'express'
 
 module.exports = app = express()
 
-# HELPER - GZIP,DEFLATE,RAW
-send = (text = '', req, res, next) ->
-  callback = (err, result) ->
-    return res.send 500, err  if err
-    res.send result
-  if typeof text isnt 'string'
-    res.set 'Content-Type', 'application/json'  unless res.get 'Content-Type'
-    text = JSON.stringify text, null, 2
-  else
-    res.set 'Content-Type', 'text/plain'  unless res.get 'Content-Type'
+# HELPER - CONTENT-TYPE NEGOCIATION
+# FIXME replace with otw
+negociateContent = (req, res, body) ->
+  accept = req.headers.accept or ''
+  return ['text/plain', body]  if typeof body is 'string'
+  return ['application/xml', js2xml 'response', body]  if /\bxml\b/.test accept
+  ['application/json', JSON.stringify body, null, 2]
+
+# HELPER - ENCODING NEGOCIATION
+# FIXME replace with otw
+negociateEncoding = (req, res, body, callback) ->
   encoding = req.headers['accept-encoding'] or ''
   encoding += ', ' + (res.get('Content-Encoding') or '')
-  # FIXME replace with otw.tokenizedHeader
   if /\bdeflate\b/.test encoding
-    res.set 'Content-Encoding', 'deflate'
-    zlib.deflate new Buffer(text, 'utf-8'), callback
+    zlib.deflate new Buffer(text, 'utf-8'), (err, result) ->
+      callback err, ['deflate', result]
   else if /\bgzip\b/.test encoding
-    res.set 'Content-Encoding', 'gzip'
-    zlib.gzip new Buffer(text, 'utf-8'), callback
+    zlib.gzip new Buffer(text, 'utf-8'),  (err, result) ->
+      callback err, ['gzip', result]
   else
-    res.send text
+    callback null, [undefined, body]
+
+# HELPER - GZIP,DEFLATE,RAW
+send = (body = '', req, res, next) ->
+  [contentType, body] = negociateContent req, res, body
+  res.set 'Content-Type', contentType  unless res.get 'Content-Type'
+  negociateEncoding req, res, body, (err, [encoding, body]) ->
+    return res.send 500, err  if err
+    res.set 'Content-Encoding', encoding  unless res.get 'Content-Encoding'
+    res.send body
 
 # HELPER - JSON TRACE
 fakeTrace = (req, res, next) ->
