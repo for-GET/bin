@@ -2,7 +2,7 @@
   "name": "hyperrest-bin",
   "description": "A simple HTTP service with controlled behaviour",
   "preferGlobal": "false",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Andrei Necualu <@andreineculau>",
   "users": [
     "andreineculau"
