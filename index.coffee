@@ -22,10 +22,10 @@ negociateEncoding = (req, res, body, callback) ->
   encoding = req.headers['accept-encoding'] or ''
   encoding += ', ' + (res.get('Content-Encoding') or '')
   if /\bdeflate\b/.test encoding
-    zlib.deflate new Buffer(text, 'utf-8'), (err, result) ->
+    zlib.deflate new Buffer(body, 'utf-8'), (err, result) ->
       callback err, ['deflate', result]
   else if /\bgzip\b/.test encoding
-    zlib.gzip new Buffer(text, 'utf-8'),  (err, result) ->
+    zlib.gzip new Buffer(body, 'utf-8'),  (err, result) ->
       callback err, ['gzip', result]
   else
     callback null, [undefined, body]
@@ -78,7 +78,7 @@ app.use (req, res, next) ->
         req.body = querystring.parse req.rawBody
       catch e
         return res.send 400
-      next()
+  next()
 app.use express.cookieParser()
 
 # ORIGIN IP
