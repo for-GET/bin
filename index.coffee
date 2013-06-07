@@ -195,4 +195,7 @@ app.all '*', (req, res, next) ->
     fakeTrace req, res, next
 
 
-app.listen process.env.PORT  unless module.parent
+unless module.parent
+  port = process.env.PORT or 1337
+  console.log "Server listening on http://0.0.0.0:#{port}"
+  app.listen port
