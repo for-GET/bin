@@ -31,5 +31,8 @@
   },
   "bin": {
     "hyperrest-bin": "./cli.js"
+  },
+  "scripts": {
+    "prepublish": "coffee -c index.coffee"
   }
 }
