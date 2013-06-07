@@ -183,7 +183,6 @@ app.use (req, res, next) ->
 # ROUTES
 app.use app.router
 app.all '*', (req, res, next) ->
-  console.log 123
   if req.accepts 'text/plain'
     res.set 'Content-Type', 'text/plain'
     send README, req, res, next
@@ -194,3 +193,6 @@ app.all '*', (req, res, next) ->
     returnRepr = returnRepr[0]  if Array.isArray returnRepr
     return res.send()  unless returnRepr is 'true'
     fakeTrace req, res, next
+
+
+app.listen process.env.PORT  unless module.parent
