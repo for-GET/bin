@@ -4,14 +4,16 @@ A simple HTTP service with controlled behaviour, inspired by [httpbin](https://g
 
 The service makes use of HTTP headers, and predominantly [X-Prefer](http://tools.ietf.org/html/draft-snell-http-prefer-18), in order to allow the client to control server behaviour.
 
-# Install & run
+
+## Install & run
 
 ```bash
 npm install hyperrest-bin
 hyperrest-bin                                                                         # or PORT=1337 hyperrest-bin
 ```
 
-# Usage
+
+## Usage
 
 ```bash
 # METHOD
@@ -56,6 +58,7 @@ curl -XPOST \
 curl -XPOST -H"X-Prefer: return-request-body" -dkey=value     http://127.0.0.1:1337   # return "key=value"
 ```
 
-# License
 
-Apache 2.0
+## License
+
+[Apache 2.0](LICENSE).
