@@ -21,7 +21,7 @@
     }
   ],
   "bin": {
-    "hyperrest-bin": "bin/cli.js"
+    "hyperrest-bin": "index.coffee"
   },
   "scripts": {
     "prepublish": "make prepublish",
@@ -39,5 +39,10 @@
     "mocha": "~1.11.0",
     "testem": "~0.2.98",
     "xml2js": "~0.2.6"
+  },
+  "publishConfig": {
+    "bin": {
+      "hyperrest-bin": "index.js"
+    }
   }
 }
