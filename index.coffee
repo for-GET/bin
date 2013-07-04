@@ -193,9 +193,3 @@ app.all '*', (req, res, next) ->
     returnRepr = returnRepr[0]  if Array.isArray returnRepr
     return res.send()  unless returnRepr is 'true'
     fakeTrace req, res, next
-
-
-unless module.parent
-  port = process.env.PORT or 1337
-  console.log "Server listening on http://0.0.0.0:#{port}"
-  app.listen port
