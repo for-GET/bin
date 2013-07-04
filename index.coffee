@@ -5,6 +5,8 @@ README = fs.readFileSync './README.md', 'utf8'
 express = require 'express'
 js2xml = require 'js2xmlparser'
 xml2js = require 'xml2js'
+_ = require 'lodash'
+httpWell = require 'know-your-http-well'
 
 module.exports = app = express()
 
@@ -182,6 +184,29 @@ app.use (req, res, next) ->
 
 # ROUTES
 app.use app.router
+
+# know-your-http-well
+app.get '/status/:code', (req, res, next) ->
+  hit = _.findWhere httpWell.statusCodes, (statusCode) ->
+    statusCode.code is req.params.code
+  return res.redirect hit.spec_href  if hit
+  res.send 404
+
+# know-your-http-well
+app.get '/method/:method', (req, res, next) ->
+  hit = _.findWhere httpWell.methods, (method) ->
+    method.method.toUpperCase() is req.params.method.toUpperCase()
+  return res.redirect hit.spec_href  if hit
+  res.send 404
+
+# know-your-http-well
+app.get '/header/:header', (req, res, next) ->
+  hit = _.findWhere httpWell.headers, (header) ->
+    header.header.toLowerCase() is req.params.header.toLowerCase()
+  return res.redirect hit.spec_href  if hit
+  res.send 404
+
+# ...
 app.all '*', (req, res, next) ->
   if req.accepts 'text/plain'
     res.set 'Content-Type', 'text/plain'

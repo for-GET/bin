@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "js2xmlparser": "~0.1.0",
-    "know-your-http-well": "0.0.2",
+    "know-your-http-well": "~0.0.4",
     "xml2js": "~0.2.6"
   },
   "devDependencies": {
