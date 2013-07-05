@@ -4,6 +4,8 @@ A simple HTTP service with controlled behaviour, inspired by [httpbin](https://g
 
 The service makes use of HTTP headers, and predominantly [X-Prefer](http://tools.ietf.org/html/draft-snell-http-prefer-18), in order to allow the client to control server behaviour.
 
+Additionaly it also makes use of [know-your-http-well](https://github.com/andreineculau/know-your-http-well) and act as a bookmarking tool for specification of HTTP status codes, headers, methods and relations.
+
 
 ## Install & run
 
