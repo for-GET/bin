@@ -55,9 +55,6 @@ curl -XPOST \
          "body":"TEXT"
         }'                                                    http://127.0.0.1:1337   # return 200, etc.
 
-                                                                                      # PREFER response with request body (LEGACY; return-request is much more versatile)
-curl -XPOST -H"X-Prefer: return-request-body" -dkey=value     http://127.0.0.1:1337   # return "key=value"
-
 
                                            # https://github.com/andreineculau/know-your-http-well
 curl http://127.0.0.1:1337/method/{method} # Specification for HTTP Status Code

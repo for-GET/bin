@@ -162,14 +162,6 @@ app.use (req, res, next) ->
   return next()  unless returnMinimal is 'true'
   res.send()
 
-# PREFER RETURN-REQUEST-BODY
-app.use (req, res, next) ->
-  returnRequestBody = req.prefer?['return-request-body']
-  returnRequestBody = returnRequestBody[0]  if Array.isArray returnRequestBody
-  return next()  unless returnRequestBody is 'true'
-  res.set 'Content-Type', req.get 'Content-Type'  if req.get 'Content-Type'
-  send req.rawBody, req, res, next
-
 # PREFER RETURN-REQUEST
 app.use (req, res, next) ->
   returnRequest = req.prefer?['return-request']
