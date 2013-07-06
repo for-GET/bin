@@ -178,23 +178,40 @@ app.use (req, res, next) ->
 app.use app.router
 
 # know-your-http-well
-app.get '/status/:code', (req, res, next) ->
-  hit = _.findWhere httpWell.statusCodes, (statusCode) ->
-    statusCode.code is req.params.code
-  return res.redirect hit.spec_href  if hit
+hitFun = {}
+hitFun.method = (value) ->
+  _.findWhere httpWell.methods, (method) ->
+    method.method.toUpperCase() is value.toUpperCase()
+hitFun.header = (value) ->
+  _.findWhere httpWell.headers, (header) ->
+    header.header.toLowerCase() is value.toLowerCase()
+hitFun.statusCode = (value) ->
+  _.findWhere httpWell.statusCodes, (statusCode) ->
+    statusCode.code is value
+hitFun.relation = (value) ->
+  _.findWhere httpWell.relations, (relation) ->
+    relation.relation.toLowerCase() is value.toLowerCase()
+
+app.get '/spec/:value', (req, res, next) ->
+  specs = [
+    'method'
+    'header'
+    'statusCode'
+    'relation'
+  ]
+  for spec in specs
+    hit = hitFun[spec] req.params.value
+    return res.redirect hit.spec_href  if hit
   res.send 404
 
-# know-your-http-well
-app.get '/method/:method', (req, res, next) ->
-  hit = _.findWhere httpWell.methods, (method) ->
-    method.method.toUpperCase() is req.params.method.toUpperCase()
-  return res.redirect hit.spec_href  if hit
-  res.send 404
-
-# know-your-http-well
-app.get '/header/:header', (req, res, next) ->
-  hit = _.findWhere httpWell.headers, (header) ->
-    header.header.toLowerCase() is req.params.header.toLowerCase()
+app.get '/:spec/:value', (req, res, next) ->
+  return next()  unless req.params.spec in [
+    'statusCode'
+    'method'
+    'header'
+    'relation'
+  ]
+  hit = hitFun[spec] req.params.value
   return res.redirect hit.spec_href  if hit
   res.send 404
 
