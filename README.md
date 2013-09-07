@@ -4,7 +4,9 @@ A simple HTTP service with controlled behaviour, inspired by [httpbin](https://g
 
 The service makes use of HTTP headers, and predominantly [X-Prefer](http://tools.ietf.org/html/draft-snell-http-prefer-18), in order to allow the client to control server behaviour.
 
-Additionaly it also makes use of [know-your-http-well](https://github.com/andreineculau/know-your-http-well) and act as a bookmarking tool for specification of HTTP status codes, headers, methods and relations.
+Additionaly it also makes use of [know-your-http-well](https://github.com/andreineculau/know-your-http-well) and acts as a bookmarking tool for specification of HTTP status codes, headers, methods and relations.
+
+This project is live at [bin.hyperrest.com](http://bin.hyperrest.com) and has a [search engine](http://mycroftproject.com/search-engines.html?name=bin.hyperrest.com) for convenience.
 
 
 ## Install & run
