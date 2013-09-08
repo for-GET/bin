@@ -1,1 +1,4 @@
-*.coffee
+/.coffee.mk
+/Makefile
+/test
+/testem.yml
