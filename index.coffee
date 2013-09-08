@@ -1,7 +1,10 @@
 fs = require 'fs'
 zlib = require 'zlib'
 querystring = require 'querystring'
-README = fs.readFileSync './README.md', 'utf8'
+try
+  README = fs.readFileSync './README.md', 'utf8'
+catch e
+  README = 'README: http://bin.hyperrest.com/'
 express = require 'express'
 js2xml = require 'js2xmlparser'
 xml2js = require 'xml2js'
