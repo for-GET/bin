@@ -1,7 +1,7 @@
 fs = require 'fs'
 zlib = require 'zlib'
 querystring = require 'querystring'
-README = fs.readFileSync './README.md', 'utf8'
+README = fs.readFileSync __dirname + '/README.md', 'utf8'
 express = require 'express'
 js2xml = require 'js2xmlparser'
 xml2js = require 'xml2js'
