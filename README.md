@@ -59,9 +59,9 @@ curl -XPOST \
 
 
                                               # https://github.com/andreineculau/know-your-http-well
-curl http://127.0.0.1:1337/method/{value}     # Specification for HTTP Status Code
+curl http://127.0.0.1:1337/method/{value}     # Specification for HTTP Method
 curl http://127.0.0.1:1337/header/{value}     # Specification for HTTP Header
-curl http://127.0.0.1:1337/statusCode/{value} # Specification for HTTP Method
+curl http://127.0.0.1:1337/statusCode/{value} # Specification for HTTP Status Code
 curl http://127.0.0.1:1337/rel/{value}        # Specification for HTTP Relation
 curl http://127.0.0.1:1337/spec/{value}       # Specification for HTTP AnyOfTheAbove (I feel lucky mode)
 ```
