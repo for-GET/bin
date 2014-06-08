@@ -7,6 +7,7 @@ js2xml = require 'js2xmlparser'
 xml2js = require 'xml2js'
 _ = require 'lodash'
 httpWell = require 'know-your-http-well'
+cookieParser = require 'cookie-parser'
 
 module.exports = app = express()
 
@@ -55,6 +56,60 @@ fakeTrace = (req, res, next) ->
 # APP
 app.set 'strict routing'
 app.disable 'x-powered-by'
+
+
+# know-your-http-well
+hitFun = {}
+hitFun.method = (value) ->
+  _.findWhere httpWell.methods, (method) ->
+    method.method.toUpperCase() is value.toUpperCase()
+hitFun.header = (value) ->
+  _.findWhere httpWell.headers, (header) ->
+    header.header.toLowerCase() is value.toLowerCase()
+hitFun.statusCode = (value) ->
+  _.findWhere httpWell.statusCodes, (statusCode) ->
+    statusCode.code is value
+hitFun.relation = (value) ->
+  _.findWhere httpWell.relations, (relation) ->
+    relation.relation.toLowerCase() is value.toLowerCase()
+
+app.get '/spec/:value', (req, res, next) ->
+  specs = [
+    'method'
+    'header'
+    'statusCode'
+    'relation'
+  ]
+  for spec in specs
+    hit = hitFun[spec] req.params.value
+    return res.redirect hit.spec_href  if hit
+  res.send 404
+
+app.get '/:spec/:value', (req, res, next) ->
+  return next()  unless req.params.spec in [
+    'statusCode'
+    'method'
+    'header'
+    'relation'
+  ]
+  hit = hitFun[spec] req.params.value
+  return res.redirect hit.spec_href  if hit
+  res.send 404
+
+# ...
+app.all '*', (req, res, next) ->
+  if req.accepts 'text/plain'
+    res.set 'Content-Type', 'text/plain'
+    send README, req, res, next
+  else if req.accepts('application/json') or req.accepts('application/xml')
+    fakeTrace req, res, next
+  else
+    returnRepr = req.prefer?['return-representation']
+    returnRepr = returnRepr[0]  if Array.isArray returnRepr
+    return res.send()  unless returnRepr is 'true'
+    fakeTrace req, res, next
+
+# BODY, COOKIE PARSERS
 app.use (req, res, next) ->
   req.rawBody = ''
   req.setEncoding 'utf8'
@@ -81,7 +136,7 @@ app.use (req, res, next) ->
       catch e
         return res.send 400
   next()
-app.use express.cookieParser()
+app.use cookieParser
 
 # ORIGIN IP
 app.use (req, res, next) ->
@@ -173,57 +228,3 @@ app.use (req, res, next) ->
   res.set header, headerValue  for header, headerValue of headers
   return next()  unless req.body.body?
   send req.body.body, req, res, next
-
-# ROUTES
-app.use app.router
-
-# know-your-http-well
-hitFun = {}
-hitFun.method = (value) ->
-  _.findWhere httpWell.methods, (method) ->
-    method.method.toUpperCase() is value.toUpperCase()
-hitFun.header = (value) ->
-  _.findWhere httpWell.headers, (header) ->
-    header.header.toLowerCase() is value.toLowerCase()
-hitFun.statusCode = (value) ->
-  _.findWhere httpWell.statusCodes, (statusCode) ->
-    statusCode.code is value
-hitFun.relation = (value) ->
-  _.findWhere httpWell.relations, (relation) ->
-    relation.relation.toLowerCase() is value.toLowerCase()
-
-app.get '/spec/:value', (req, res, next) ->
-  specs = [
-    'method'
-    'header'
-    'statusCode'
-    'relation'
-  ]
-  for spec in specs
-    hit = hitFun[spec] req.params.value
-    return res.redirect hit.spec_href  if hit
-  res.send 404
-
-app.get '/:spec/:value', (req, res, next) ->
-  return next()  unless req.params.spec in [
-    'statusCode'
-    'method'
-    'header'
-    'relation'
-  ]
-  hit = hitFun[spec] req.params.value
-  return res.redirect hit.spec_href  if hit
-  res.send 404
-
-# ...
-app.all '*', (req, res, next) ->
-  if req.accepts 'text/plain'
-    res.set 'Content-Type', 'text/plain'
-    send README, req, res, next
-  else if req.accepts('application/json') or req.accepts('application/xml')
-    fakeTrace req, res, next
-  else
-    returnRepr = req.prefer?['return-representation']
-    returnRepr = returnRepr[0]  if Array.isArray returnRepr
-    return res.send()  unless returnRepr is 'true'
-    fakeTrace req, res, next
