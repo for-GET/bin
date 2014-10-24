@@ -209,7 +209,7 @@ app.use (req, res, next) ->
   returnRequest = req.prefer?['return-request']
   returnRequest = returnRequest[0]  if Array.isArray returnRequest
   return next()  unless returnRequest is 'true'
-  return next()  unless req.get('Content-Type') is 'application/json' and req.body?
+  return next()  unless /\bjson\b/.test(req.headers['content-type'] or '') and req.body?
   res.status req.body.status  if req.body.status?
   headers = req.body.headers or {}
   res.set header, headerValue  for header, headerValue of headers
