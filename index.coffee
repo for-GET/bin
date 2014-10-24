@@ -96,19 +96,6 @@ app.get '/:spec/:value', (req, res, next) ->
   return res.redirect hit.spec_href  if hit
   res.send 404
 
-# ...
-app.all '*', (req, res, next) ->
-  if req.accepts 'text/plain'
-    res.set 'Content-Type', 'text/plain'
-    send README, req, res, next
-  else if req.accepts('application/json') or req.accepts('application/xml')
-    fakeTrace req, res, next
-  else
-    returnRepr = req.prefer?['return-representation']
-    returnRepr = returnRepr[0]  if Array.isArray returnRepr
-    return res.send()  unless returnRepr is 'true'
-    fakeTrace req, res, next
-
 # BODY, COOKIE PARSERS
 app.use (req, res, next) ->
   req.rawBody = ''
@@ -228,3 +215,16 @@ app.use (req, res, next) ->
   res.set header, headerValue  for header, headerValue of headers
   return next()  unless req.body.body?
   send req.body.body, req, res, next
+
+# ...
+app.all '*', (req, res, next) ->
+  if req.accepts 'text/plain'
+    res.set 'Content-Type', 'text/plain'
+    send README, req, res, next
+  else if req.accepts('application/json') or req.accepts('application/xml')
+    fakeTrace req, res, next
+  else
+    returnRepr = req.prefer?['return-representation']
+    returnRepr = returnRepr[0]  if Array.isArray returnRepr
+    return res.send()  unless returnRepr is 'true'
+    fakeTrace req, res, next
