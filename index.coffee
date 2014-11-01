@@ -154,7 +154,7 @@ app.use (req, res, next) ->
 # PREFER
 app.use (req, res, next) ->
   # FIXME replace with otw.tokenizedHeader
-  prefer = req.headers['x-prefer']
+  prefer = req.headers['prefer'] or req.headers['x-prefer']
   return next()  unless prefer
   prefer = prefer.split ','
   result = {}
@@ -174,6 +174,7 @@ app.use (req, res, next) ->
   status = req.prefer?.status
   return next() unless status?
   status = status[0]  if Array.isArray status
+  res.set 'Preference-Applied', "status=#{status}"
   res.status status
   next()
 
@@ -182,6 +183,7 @@ app.use (req, res, next) ->
   cookies = req.prefer?.cookie
   return next()  unless cookies?
   cookies = [cookies]  unless Array.isArray cookies
+  res.set 'Preference-Applied', ("cookie=#{cookie}"  for cookie in cookies).join ', '
   for cookie in cookies
     [name, value] = cookie.split '|'
     if value
@@ -195,6 +197,7 @@ app.use (req, res, next) ->
   wait = req.prefer?.wait
   return next()  unless wait?
   wait = wait[0]  if Array.isArray wait
+  res.set 'Preference-Applied', "wait=#{wait}"
   setTimeout (() -> next()), wait * 1000
 
 # PREFER RETURN-MINIMAL
@@ -202,6 +205,7 @@ app.use (req, res, next) ->
   returnMinimal = req.prefer?['return-minimal']
   returnMinimal = returnMinimal[0]  if Array.isArray returnMinimal
   return next()  unless returnMinimal is 'true'
+  res.set 'Preference-Applied', 'return-minimal'
   res.send()
 
 # PREFER RETURN-REQUEST
@@ -210,6 +214,7 @@ app.use (req, res, next) ->
   returnRequest = returnRequest[0]  if Array.isArray returnRequest
   return next()  unless returnRequest is 'true'
   return next()  unless /\bjson\b/.test(req.headers['content-type'] or '') and req.body?
+  res.set 'Preference-Applied', 'return-request'
   res.status req.body.status  if req.body.status?
   headers = req.body.headers or {}
   res.set header, headerValue  for header, headerValue of headers
