@@ -123,7 +123,7 @@ app.use (req, res, next) ->
       catch e
         return res.send 400
   next()
-app.use cookieParser
+app.use cookieParser()
 
 # ORIGIN IP
 app.use (req, res, next) ->
