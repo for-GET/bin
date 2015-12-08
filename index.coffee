@@ -92,7 +92,7 @@ app.get '/:spec/:value', (req, res, next) ->
     'header'
     'relation'
   ]
-  hit = hitFun[spec] req.params.value
+  hit = hitFun[req.params.spec] req.params.value
   return res.redirect hit.spec_href  if hit
   res.send 404
 
